@@ -12,13 +12,19 @@ export const AboutSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h3 className="text-2xl font-semibold">
-              Passionate Fullstack Web Developer 
+               Experience
             </h3>
+            
+
 
             <p className="text-muted-foreground">
-              A motivated and skilled Full-Stack Developer with expertise in
-              HTML, CSS, JavaScript, React, Tailwind CSS, Node.js, Express, and
-              MongoDB.
+              Developed responsive and user-friendly UI, adding new sections and forms.
+            </p>
+            <p className="text-muted-foreground">
+              Optimized website performance for faster load times and better user experience.
+            </p>
+            <p className="text-muted-foreground">
+               Implemented basic SEO practices to improve website visibility.
             </p>
 
             <p className="text-muted-foreground">

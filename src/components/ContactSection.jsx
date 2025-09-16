@@ -15,7 +15,7 @@ export const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -27,9 +27,12 @@ export const ContactSection = () => {
         method: "POST",
         headers: {
           "Accept": "application/json",
+          "Content-Type": "application/json",
         },
-        body: formData,
+        body: JSON.stringify(data),
       });
+
+      const resData = await response.json();
 
       if (response.ok) {
         toast({
@@ -38,7 +41,6 @@ export const ContactSection = () => {
         });
         e.currentTarget.reset();
       } else {
-        const resData = await response.json();
         throw new Error(resData.error || "Form submission failed");
       }
     } catch (err) {

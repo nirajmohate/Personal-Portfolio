@@ -6,7 +6,7 @@ import {
   Send,
   Github,
 } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa"; 
+import { FaWhatsapp } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -19,22 +19,34 @@ export const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
     try {
-      console.log("Form Data Submitted:", data);
-
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
+      const response = await fetch("https://formspree.io/f/mqadnjww", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+        },
+        body: formData,
       });
-      e.target.reset();
+
+      if (response.ok) {
+        toast({
+          title: "✅ Message sent!",
+          description: "Thank you for your message. I'll get back to you soon.",
+        });
+        e.currentTarget.reset();
+      } else {
+        const resData = await response.json();
+        throw new Error(resData.error || "Form submission failed");
+      }
     } catch (err) {
       toast({
-        title: "Error",
+        title: "❌ Error",
         description: "Something went wrong, please try again.",
       });
+      console.error("FormSpree error:", err);
     } finally {
       setIsSubmitting(false);
     }

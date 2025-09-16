@@ -24,21 +24,26 @@ export const ContactSection = () => {
     try {
       const response = await fetch("https://formspree.io/f/mqadnjww", {
         method: "POST",
-        headers: {
-          Accept: "application/json", // ✅ only Accept header (no Content-Type here!)
-        },
-        body: formData, // ✅ send raw FormData
+        headers: { Accept: "application/json" },
+        body: formData,
       });
 
-      if (response.ok) {
+      // ✅ Treat HTTP 200 as success always
+      if (response.status === 200) {
         toast({
           title: "✅ Message sent!",
           description: "Thank you for your message. I'll get back to you soon.",
         });
         e.currentTarget.reset();
       } else {
-        const resData = await response.json();
-        throw new Error(resData.error || "Form submission failed");
+        let errorMessage = "Form submission failed";
+        try {
+          const resData = await response.json();
+          if (resData.error) errorMessage = resData.error;
+        } catch {
+          // ignore if response is not JSON
+        }
+        throw new Error(errorMessage);
       }
     } catch (err) {
       toast({

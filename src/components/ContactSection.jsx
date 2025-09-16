@@ -20,16 +20,14 @@ export const ContactSection = () => {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
 
     try {
       const response = await fetch("https://formspree.io/f/mqadnjww", {
         method: "POST",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: "application/json", // ✅ only Accept header (no Content-Type here!)
         },
-        body: JSON.stringify(data),
+        body: formData, // ✅ send raw FormData
       });
 
       if (response.ok) {
@@ -39,14 +37,8 @@ export const ContactSection = () => {
         });
         e.currentTarget.reset();
       } else {
-        let errorMessage = "Form submission failed";
-        try {
-          const resData = await response.json();
-          if (resData.error) errorMessage = resData.error;
-        } catch {
-          // ignore
-        }
-        throw new Error(errorMessage);
+        const resData = await response.json();
+        throw new Error(resData.error || "Form submission failed");
       }
     } catch (err) {
       toast({

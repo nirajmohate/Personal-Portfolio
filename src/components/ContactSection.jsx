@@ -1,4 +1,4 @@
-import {
+ import {
   Linkedin,
   Mail,
   MapPin,
@@ -6,7 +6,7 @@ import {
   Send,
   Github,
 } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa"; 
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -19,38 +19,22 @@ export const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch("https://formspree.io/f/mqadnjww", {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
-      });
+      console.log("Form Data Submitted:", data);
 
-      // ✅ Treat HTTP 200 as success always
-      if (response.status === 200) {
-        toast({
-          title: "✅ Message sent!",
-          description: "Thank you for your message. I'll get back to you soon.",
-        });
-        e.currentTarget.reset();
-      } else {
-        let errorMessage = "Form submission failed";
-        try {
-          const resData = await response.json();
-          if (resData.error) errorMessage = resData.error;
-        } catch {
-          // ignore if response is not JSON
-        }
-        throw new Error(errorMessage);
-      }
+      toast({
+        title: "Message sent!",
+        description: "Thank you for your message. I'll get back to you soon.",
+      });
+      e.target.reset();
     } catch (err) {
       toast({
-        title: "❌ Error",
+        title: "Error",
         description: "Something went wrong, please try again.",
       });
-      console.error("FormSpree error:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -151,7 +135,7 @@ export const ContactSection = () => {
           {/* Contact Form */}
           <div className="bg-card p-8 rounded-lg shadow-xs">
             <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-6" action="https://formsubmit.co/nirajmohate@gmail.com"  method="POST" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2">
                   Your Name

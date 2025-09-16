@@ -15,7 +15,7 @@ export const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -26,13 +26,11 @@ export const ContactSection = () => {
       const response = await fetch("https://formspree.io/f/mqadnjww", {
         method: "POST",
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-
-      const resData = await response.json();
 
       if (response.ok) {
         toast({
@@ -41,7 +39,14 @@ export const ContactSection = () => {
         });
         e.currentTarget.reset();
       } else {
-        throw new Error(resData.error || "Form submission failed");
+        let errorMessage = "Form submission failed";
+        try {
+          const resData = await response.json();
+          if (resData.error) errorMessage = resData.error;
+        } catch {
+          // ignore
+        }
+        throw new Error(errorMessage);
       }
     } catch (err) {
       toast({
